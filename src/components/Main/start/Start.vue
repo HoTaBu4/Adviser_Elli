@@ -32,7 +32,7 @@ const handleLogAsGuest = () => {
           language === Languages.us ? " ASSISTANT RIGHT ON" : "ПОМІЧНИК ПРЯМО З"
         }}
         <br />
-        {{ language === Languages.us ? "YOUR PHONE" : "вашого телефону" }}
+        {{ language === Languages.us ? "YOUR PHONE" : "ВАШОГО ТЕЛЕФОНУ" }}
       </h1>
       <h2 class="main__text--h2">24/7</h2>
     </div>
@@ -51,14 +51,14 @@ const handleLogAsGuest = () => {
       </div>
     </transition>
     <h2 class="buttons-container__title">
-      {{ language === Languages.us ? "start" : "почати " }}
+      {{ language === Languages.us ? "START" : "ПОЧАТИ " }}
     </h2>
     <div 
       class="buttons-container__buttons"
       :class="{'buttons-container__ukrainian' : language === Languages.uk}"
     >
       <RouterLink :to="{ name: 'authentication', params: { type: AuthenticationTypes.login }}" class="buttons-container__log-in">
-        {{ language === Languages.us ? "log in" : "ввійти" }}
+        {{ language === Languages.us ? "LOG IN" : "ВВІЙТИ" }}
       </RouterLink>
       <RouterLink
         :to="{
@@ -67,12 +67,12 @@ const handleLogAsGuest = () => {
         }"
         class="buttons-container__register"
       >
-        {{ language === Languages.us ? "register" : "зареєструватися" }}
+        {{ language === Languages.us ? "REGISTER" : "ЗАРЕЄСТРУВАТИСЯ" }}
       </RouterLink>
     </div>
     <div class="buttons-container__guest">
       <div class="buttons-container__log-as-guest" @click="handleLogAsGuest">{{
-        language === Languages.us ? "log as a guest" : "зайти як гість"
+        language === Languages.us ? "LOG IN AS A GUEST" : "ЗАЙТИ ЯК ГІСТЬ"
       }}</div>
       <svg
         width="38"

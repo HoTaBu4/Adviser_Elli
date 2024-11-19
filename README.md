@@ -31,7 +31,7 @@ The project utilizes the following technologies:
 
 ## 🚀 Demo
 
-Check out the [Live Demo](https://hotabu4.github.io/adviser_alli/) to experience Adviser Elii in action!
+Check out the [Live Demo](https://adviser-elli.netlify.app) to experience Adviser Elii in action!
 
 ## ⚙️ Installation
 
