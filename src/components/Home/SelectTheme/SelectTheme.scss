@@ -1,0 +1,67 @@
+.select-theme {
+  position: absolute;
+  background: url("/public/pictures/images/back__main__dekstop.png");
+  background-size: 100% 100%;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  // padding: 0 24px;
+  height: 100%;
+  width: 100%;
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    // padding:;
+  }
+
+  &__title {
+    text-align: center;
+    font-size: 28px;
+    font-family: Inter, sans-serif;
+    font-weight: 300;
+    line-height: 40px;
+    letter-spacing: 2px;
+    color: white;
+    margin-bottom: 50px;
+  }
+
+  &__select {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    padding: 0 20px;
+  }
+}
+
+@media (min-width: 999px) {
+  .select-theme {
+    &__wrapper {
+    }
+
+    &__title {
+      font-size: 50.75px;
+      line-height: 64.75px;
+    }
+
+    &__select {
+      height: unset;
+      width: unset;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      justify-items: center;
+      align-items: center;
+    }
+  }
+}

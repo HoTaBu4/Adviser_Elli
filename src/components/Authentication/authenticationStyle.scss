@@ -1,0 +1,169 @@
+@import "/src/assets/styles/mixins.scss";
+
+.authentication {
+  z-index: 10;
+  max-width: 365px;
+
+  &__container {
+  }
+
+  &__form {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  &__email-block {
+  }
+
+  &__email {
+    &--input {
+    }
+  }
+
+  &__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    line-height: 21px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background-color: #6e757c;
+    color: black;
+    transition: all ease 0.5s;
+    height: 74px;
+    width: 100%;
+    border-radius: 50px;
+    margin-top: 135px;
+    &:hover {
+      background-color: white;
+    }
+  }
+
+  &__forgot-password {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+    &--button  {
+      color: white;
+      padding: 4px 0;
+      border-bottom: 1px solid white;
+      font-size: 17px;
+      font-family: Inter,sans-serif;
+      font-weight: 300;
+      line-height: 28px;
+      letter-spacing: 3px;
+    }
+  }
+  
+  &__back-button {
+    display: flex;
+    flex-direction: row;  
+    align-items: center;  
+    gap: 5px;
+    position: absolute;
+    left: 20px;
+    top: 91px;
+    z-index: 100;
+
+    &:hover &--path {
+      fill:white
+    }
+
+    &--path {
+
+      fill: #6E757C
+    }
+
+    &--svg {
+      height: 25px;
+      width: 14px;
+    }
+
+    &--text {
+      font-size: 17px;
+      font-family: Inter,sans-serif;
+      font-weight: 400;
+      line-height: 21px;
+      color: white;    
+      padding: 8px 0;
+      border-bottom: 1px solid white;
+    }
+  }
+
+  &__register-block {
+    flex-direction: column;
+    gap: 6px;
+
+    @include center-element;
+  }
+
+  &__arrow-sign {
+    display: none;
+  }
+
+  &__register-text {
+    text-wrap: nowrap;
+    color: #dbdbdb;
+    font-size: 17px;
+    font-family: Inter,sans-serif;
+    font-weight: 300;
+    line-height: 28px;
+    letter-spacing: 2px;
+  }
+
+  &__register-link {
+    color: #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
+    padding: 6px 0;
+    transition: add ease 0.5s;
+    font-size: 17px;
+    font-family: Inter,sans-serif;
+    font-weight: 500;
+    line-height: 21px;
+    letter-spacing: 2px;
+    &:hover {
+      color: white;
+      border-bottom: 1px solid white;
+    }
+  }
+
+  &__or {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #6e757c;
+    margin-top: 35px;
+    margin-bottom: 35px;
+
+    &--line {
+      height: 1px;
+      width: 100%;
+      background-color: #6e757c;
+    }
+
+    &--text {
+      padding: 10px;
+    }
+  }
+
+  &__social-networks {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 420px) {
+  .authentication {
+    &__register-block {
+      flex-direction: row;
+    }
+    &__arrow-sign {
+      display: block;
+    }
+  }
+}

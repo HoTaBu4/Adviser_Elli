@@ -1,0 +1,17 @@
+# netlify.toml
+[build]
+  command = "npm run build"    # Command to build your project
+  publish = "dist"             # Folder to publish (Vite’s default output)
+
+# Optional: You can add plugins or environment variables here if needed.
+
+[[redirects]]
+  from = "/assets/*"
+  to = "/assets/:splat"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

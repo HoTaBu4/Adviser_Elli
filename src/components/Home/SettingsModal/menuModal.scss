@@ -1,0 +1,147 @@
+@import '/src/assets/styles/mixins.scss';
+
+.menu-modal {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  backdrop-filter: blur(3px);
+  color: white;
+
+  &__content {
+    padding: 14px 10px 50px 14px;
+    max-width: 400px;
+    width: 100%;
+    background-color: #0f121c;
+    border-radius: 16px;
+  }
+
+  &__close {
+    display: flex;
+    justify-content: end;
+  }
+
+  &__close-img {
+    cursor: pointer;
+  }
+
+  &__title {
+    text-align: center;
+    font-size: 28px;
+    font-family: Inter, sans-serif;
+    font-weight: 300;
+    line-height: 40px;
+    letter-spacing: 2px;
+  }
+
+  &__language {
+    margin-bottom: 24px;
+  }
+
+  &__language-title {
+    margin-left: 36px;
+    font-size: 16.5px;
+    font-family: Inter, sans-serif;
+    font-weight: 400;
+    color: #00c2ff;
+    margin-bottom: 16px;
+  }
+
+  &__language-change {
+    display: flex;
+    gap: 24px;
+  }
+
+  &__en,
+  &__uk {
+    cursor: pointer;
+    border: 1px solid white;
+    color: white;
+    border-radius: 50px;
+    height: 74px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.5s ease;
+    &--selected {
+      background-color: white;
+      color: black;
+    }
+  }
+
+  &__password {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  &__buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 17px;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    line-height: 21px;
+    letter-spacing: 4px;
+    gap: 20px;
+  }
+
+  &__send-code {
+    color: white;
+
+    @include center-element;
+  }
+
+  &__save,
+  &__log-out {
+    cursor: pointer;
+    font-size: 17px;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    line-height: 21px;
+    letter-spacing: 2px;
+  }
+
+  &__save {
+    border-radius: 50px;
+    background-color: white;
+    color: black;
+    height: 74px;
+    margin-bottom: 24px;
+    width: 100%;
+  }
+
+  &__log-out {
+    display: inline-block;
+    height: 36px;
+    color: red;
+    background-color: transparent;
+    border-bottom: 1px solid red;
+  }
+
+  &__settings,
+  &__account {
+  }
+
+  &__delete-chats {
+    display: inline-block;
+    height: 36px;
+    color: red;
+    background-color: transparent;
+    border-bottom: 1px solid red;
+    cursor: pointer;
+    font-size: 17px;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    line-height: 21px;
+    letter-spacing: 2px;
+  }
+}

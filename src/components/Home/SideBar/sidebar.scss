@@ -1,0 +1,135 @@
+.aside {
+  box-sizing: border-box;
+  max-width: 420px;
+  width: 100%;
+  position: absolute;
+  min-width: 320px;
+  z-index: 9;
+  top: 0;
+  left: -100%; /* Схований сайдбар */
+  transition: left 0.3s ease-in-out; /* Анімація руху */
+  height: 100%;
+  background: url("/pictures/images/sidebar.png");
+  background-size: cover;
+  
+  border-radius: 0 17.5px 17.5px 0;
+  padding: 120px 38px 0 38px;
+
+  &__controller {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  &__wrapper {
+    height: 100%;
+  }
+
+  &__request,
+  &__saved {
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.5s ease;
+  }
+
+  &__title {
+    color: white;
+    font-size: 16.5px;
+    font-family: Inter, sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  &__red-notice {
+    color: #ff3b3b;
+    font-size: 17.5px;
+    font-family: Inter, sans-serif;
+    font-weight: 300;
+    line-height: 28px;
+    letter-spacing: 2px;
+  }
+
+  &__container {
+    margin: 20px 0;
+    color: white;
+    overflow-y: auto;
+    overflow-y: auto;
+    transition: height 0.3s ease;
+  }
+
+  &__request.full-height,
+  &__saved.full-height {
+    height: calc(100% - 50px); /* Full height minus controller height */
+  }
+
+  &__request.half-height,
+  &__saved.half-height {
+    height: calc(50% - 25px); /* Half height minus half of controller height */
+  }
+
+  &__request.closed,
+  &__saved.closed {
+    height: 50px; /* Only the controller visible */
+  }
+
+  &__container::-webkit-scrollbar {
+    position: absolute;
+    top: 0;
+    width: 4px;
+  }
+
+  &__container::-webkit-scrollbar-thumb {
+    background: hsla(0, 0%, 100%, 1);
+
+    background: linear-gradient(
+      1deg,
+      hsla(0, 0%, 100%, 0.24) 14%,
+      hsla(194, 100%, 50%, 0.24) 100%
+    );
+
+    background: -moz-linear-gradient(
+      1deg,
+      hsla(0, 0%, 100%, 0.24) 14%,
+      hsla(194, 100%, 50%, 0.24) 100%
+    );
+
+    background: -webkit-linear-gradient(
+      1deg,
+      hsla(0, 0%, 100%, 0.24) 14%,
+      hsla(194, 100%, 50%, 0.24) 100%
+    );
+
+    border-radius: 50px;
+  }
+
+  &__container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &__arrow {
+    width: 16px;
+    height: 8px;
+    transition: all 0.5s ease;
+    &--isOpen {
+      transform: rotateZ(180deg);
+    }
+  }
+
+  &__info {
+    font-family: Inter, sans-serif;
+    font-size: 15px;
+    color: white;
+  }
+}
+
+.aside.open {
+  left: 0;
+}
+
+@media (min-width: 900px) {
+  .aside {
+    position: static;
+    height: 100%;
+  }
+}

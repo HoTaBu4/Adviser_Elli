@@ -1,0 +1,55 @@
+@import "./variables.scss";
+
+@mixin defaulButton {
+  color: white;
+  border: 1px solid white;
+  background-color: transparent;
+  transition: all ease 0.5s;
+  &:hover {
+    color: black;
+    background-color: white;
+  }
+}
+
+@mixin center-element {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin container {
+  padding: 0 24px;
+  box-sizing: border-box;
+
+  @media (min-width: 699px) {
+    padding: 0 50px;
+    max-width: 1512px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 1300px) {
+    padding: 0 120px;
+  }
+}
+
+@mixin h1 {
+  font-family: inter, sans-serif;
+  font-weight: 300;
+  font-size: 50px;
+  line-height: 60px;
+  letter-spacing: 5%;
+}
+
+@mixin h2 {
+  font-size: 75px;
+  font-family: Inter;
+  font-weight: 100;
+  line-height: 68.25px;
+}
+
+@mixin button {
+  font-family: inter, sans-serif;
+  font-size: 17px;
+  line-height: 21px;
+  letter-spacing: 3px;
+}

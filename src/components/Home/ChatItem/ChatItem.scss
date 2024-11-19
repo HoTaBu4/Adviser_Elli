@@ -1,0 +1,79 @@
+.chat-item {
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  color: white;
+  gap: 14px;
+  word-wrap: break-word;
+
+  &--ai {
+    justify-content: flex-start; /* Align left for AI */
+  }
+
+  &--user {
+    justify-content: flex-end; /* Align right for user */
+  }
+
+  &__image {
+  }
+
+  &__img {
+    display: none;
+  }
+
+  &__text {
+    word-wrap: break-word;
+    display: inline-block;
+
+    &--ai {
+      font-size: 17.5px;
+      font-family: Inter, sans-serif;
+      font-weight: 300;
+      line-height: 30px;
+      letter-spacing: 2px;
+    }
+
+    &--user {
+      padding: 19px 32px;
+      max-width: 70%; /* Обмежуємо ширину повідомлення */
+      margin-left: 70px;
+      font-size: 17.5px;
+      font-family: Inter, sans-serif;
+      font-weight: 500;
+      line-height: 23px;
+      background-color: #464c5f;
+      border-radius: 16px;
+    }
+  }
+  &__svg {
+    stroke: white;
+    display: flex;
+    margin-left: auto;
+  }
+  &__path {
+    transition: all 0.5s ease;
+    fill: transparent;
+
+    &.is_saved {
+      fill: white;
+    }
+  }
+
+  &__text-wrapper {
+  }
+
+  & code {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word; 
+    display: inline-block;
+  }
+}
+
+@media (min-width: 420px) {
+  .chat-item {
+    &__img {
+      display: block;
+    }
+  }
+}

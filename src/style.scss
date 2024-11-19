@@ -1,0 +1,80 @@
+@import "normalize.css";
+@import "./assets/styles/mixins.scss";
+
+html {
+  background: rgb(14, 9, 16);
+  background: linear-gradient(
+    0deg,
+    rgba(14, 9, 16, 1) 0%,
+    rgba(9, 9, 14, 1) 100%
+  );
+  height: 100%;
+}
+
+body {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: url('/public/pictures/images/main__background.png');
+  background-size: cover;
+  overflow: auto;
+  @media(min-width: 640px) {
+    background: url("/pictures/images/back__main__dekstop.png");
+    background-size: cover;
+  }
+}
+
+a,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  text-decoration: none;
+  color: inherit;
+  margin: 0;
+}
+button {
+  border: 0;
+  outline: none;
+  padding: 0;
+  background-color: transparent;
+}
+
+textarea {
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+//chrome auto complete
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus input:-internal-autofill-selected,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: none;
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: white;
+  color: inherit;
+  font-size: 17.5px !important;
+  font-family: Inter, sans-serif !important;
+  font-weight: 500 !important;
+  color: white;
+}
+
+h1 {
+  @include h1;
+}
+
+h2 {
+  @include h2;
+}
