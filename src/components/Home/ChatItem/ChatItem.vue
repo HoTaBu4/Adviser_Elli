@@ -11,6 +11,7 @@ import { useStore } from "vuex";
 const props = defineProps({
   item: {
     type: Object as PropType<Message>,
+    required: true
   },
   isLastItem: {
     type: Boolean,
@@ -28,7 +29,7 @@ const props = defineProps({
   guestChat: {
     type: Boolean,
     default: false,
-  }
+  },  
 });
 
 let i = 0;
@@ -62,7 +63,12 @@ const handleClick = () => {
 
 // Start typing when component mounts
 onMounted(() => {
+  console.log(isAiTyping,1)
+  console.log(props.isLastItem,2)
+  console.log(props.item?.is_ai_response,3)
+  console.log(props.item?.content)
   if (isAiTyping && props.isLastItem && props.item?.is_ai_response) {
+    console.log(1)
     i = 0;
     typedContent.value = "";
     isTyping.value = true;
@@ -95,11 +101,11 @@ onMounted(() => {
       }"
     >
       <div
-        v-if="item"
+        v-if="item?.content"
         class="chat-item__text-wrapper"
         v-html="
-          // isLoading && item.is_ai_response && isAiTyping ? marked(typedContent) : marked(item?.content)
-          marked(item.content)
+          item.content &&
+          item.is_ai_response && isAiTyping && typedContent ? marked(typedContent) : marked(item.content)
         "
       ></div>
       <div

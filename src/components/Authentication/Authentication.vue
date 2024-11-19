@@ -208,7 +208,7 @@ const validatePassword = () => {
           </div>
         </button>
         <button class="authentication__button" @click="MainValidation">
-          {{ language === Languages.us ? "continue" : "продовжити" }}
+          {{ language === Languages.us ? "CONTINUE" : "ПРОДОВЖИТИ" }}
           <Loader :size="30" v-if="user.isloading"/>
         </button>
       </form>
@@ -243,14 +243,14 @@ const validatePassword = () => {
           class="authentication__register-link"
           v-if="route.params.type === 'login'"
         >
-          {{ language === Languages.us ? "register" : "зареєстуватися"}}
+          {{ language === Languages.us ? "REGISTER" : "ЗАРЕЄСТРУВАТИСЯ"}}
         </RouterLink>
         <RouterLink 
           :to="{ name: 'authentication', params: { type: AuthenticationTypes.login }}" 
           class="authentication__register-link"
           v-else
         >
-          {{ language === Languages.us ? "login" : "увійти"}}
+          {{ language === Languages.us ? "LOGIN" : "УВІЙТИ"}}
         </RouterLink>
       </div>
       <div class="authentication__or">

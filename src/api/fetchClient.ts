@@ -1,7 +1,7 @@
 import { getCookie } from "../assets/cookie";
 import { logout } from "../services/authService";
 
-const BASE_URL = "https://interior-arluene-mwellick-4212a5bc.koyeb.app";
+const BASE_URL = "https://6733aea01a990d00089f0ca9--adviser-elli.netlify.app";
 
 let isLoggingOut = false;
 

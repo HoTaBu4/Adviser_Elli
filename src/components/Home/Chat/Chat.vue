@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick, PropType, onUnmounted} from "vue";
+import { ref, onMounted, nextTick, PropType, onUnmounted, reactive} from "vue";
 import ChatItem from "../ChatItem/ChatItem.vue";
 import {
   createMessage,
@@ -46,7 +46,7 @@ const text = ref<string>("");
 const overflow = ref<boolean>(false);
 const textareaRef = ref<HTMLTextAreaElement | null>(null);
 const maxRows = ref<number>(5);
-const chatsItems = ref<Message[]>([]);
+const chatsItems = reactive<Message[]>([]);
 const createdChatUser = ref<Chat | null>(null);
 const guestGettingAnswer = ref<boolean>(false)
 
@@ -69,39 +69,41 @@ function autoResize() {
 }
 
 const handleSubmit = () => {
-  if (!props.selectedChat?.selecedSaveMessage) {
+  if (!props.selectedChat?.selecedSaveMessage && text.value.trim() !== "") {
     //for the guest messages
     if (props.guestChat && !!props.guestChatId && !guestGettingAnswer.value) {
-      const lastIndex = chatsItems.value.length;
-      guestGettingAnswer.value = true
-      chatsItems.value.push({
+      const lastIndex = chatsItems.length;
+      
+      chatsItems.push({
         content: text.value,
         is_ai_response: false,
         id: lastIndex + 1,
       });
       
-
+      guestGettingAnswer.value = true
+      
+      store.commit("selectedChat/setIsAiTyping", true);
       client
         .post(`/chats/${props.guestChatId}/guest/message`, {
           content: text.value,
         })
         .then((data: { response: string }) => {
-          chatsItems.value.push({
-            content: data.response,
-            is_ai_response: true,
-            id: lastIndex + 1,
-          });
-
-          // store.commit("selectedChat/setIsAiTyping", true);
+            chatsItems.push({
+              content: data.response,
+              is_ai_response: true,
+              id: lastIndex + 1,
+            });
         }).finally(() => guestGettingAnswer.value = false)
         
       text.value = ''
     //for the user first message
     } else if (
       !props.guestChat &&
-      text.value.trim() !== "" &&
-      props.selectedChat?.selectedChat === null
+      props.selectedChat?.selectedChat === null &&
+      !props.selectedChat.isAiTyping
     ) {
+
+      console.log('first message')
       const obj = {
         theme_id: props.selectedtheme,
       };
@@ -111,13 +113,14 @@ const handleSubmit = () => {
         is_ai_response: false,
       };
 
-      chatsItems.value.push(firstUserMessage);
+      chatsItems.push(firstUserMessage);
 
       client.post("/chats/create", obj).then((data: Chat) => {
         createdChatUser.value = { ...data, messages: [] };
 
         createdChatUser.value.messages.push(firstUserMessage);
-
+        
+        store.commit("selectedChat/setIsAiTyping", true);
         client
           .post(`/chats/${data.id}/message`, { content: text.value })
           .then((data: AiResponseMessage) => {
@@ -130,18 +133,17 @@ const handleSubmit = () => {
             createdChatUser.value?.messages.push(chatData);
             store.commit("chats/addChat", createdChatUser.value);
             store.commit("selectedChat/setSelectedChat", createdChatUser);
-            // store.commit("selectedChat/setIsAiTyping", true);
+            store.commit("selectedChat/setIsAiTyping", true);
             emit("resetTheme");
           });
       });
     // for the user messages
     } else if (
       !props.guestChat &&
-      text.value.trim() !== "" &&
       props.selectedChat?.selectedChat &&
       !props.selectedChat.isAiTyping
     ) {
-      // store.commit("selectedChat/setIsAiTyping", true);
+      console.log('second message')
       createMessage(props.selectedChat.selectedChat.id, text.value);
       text.value = "";
     }
@@ -153,7 +155,7 @@ const createNewChat = () => {
     emit("shoseTheme");
     store.commit("selectedChat/reset");
   } else {
-    chatsItems.value = [];
+    chatsItems.splice(0);
     emit("shoseTheme");
   }
 };

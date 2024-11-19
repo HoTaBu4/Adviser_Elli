@@ -22,22 +22,22 @@ const handleLogAsGuest = () => {
   <div class="main__info" v-if="!start">
     <div class="main__text">
       <h1 class="main__text--h1">
-        {{ language === Languages.us ? "An all-powerful" : "Всесильний" }}
+        {{ language === Languages.us ? "AN All-POWERFULL" : "ВСЕСИЛЬНИЙ" }}
         <br />
         <span class="main__text--span">{{
-          language === Languages.us ? "personal AI" : "особистий ШІ"
+          language === Languages.us ? "PERSONAL AI" : "ОСОБИСТИЙ ШІ"
         }}</span>
         <br />
         {{
-          language === Languages.us ? "assistant right on" : "помічник прямо з"
+          language === Languages.us ? " ASSISTANT RIGHT ON" : "ПОМІЧНИК ПРЯМО З"
         }}
         <br />
-        {{ language === Languages.us ? "your phone" : "вашого телефону" }}
+        {{ language === Languages.us ? "YOUR PHONE" : "вашого телефону" }}
       </h1>
       <h2 class="main__text--h2">24/7</h2>
     </div>
     <button class="main__button" @click="start = true">
-      {{ language === Languages.us ? "start now" : "почати зараз" }}
+      {{ language === Languages.us ? "START NOW" : "ПОЧАТИ ЗАРАЗ" }}
     </button>
   </div>
   <div class="buttons-container" v-if="start">
