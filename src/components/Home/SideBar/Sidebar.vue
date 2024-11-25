@@ -128,28 +128,29 @@ onMounted(() => {
                 : `You can&#39;t access your search history or saved recommendations since you logged in as a guest.`
             }}
           </div>
-        </div>
-        <div
-          class="aside__container--items"
-          v-if="!user.isGuest && !isLoadingMessages"
-        >
-          <SideBarItem
-            v-for="item in savedMessages"
-            :key="item.id"
-            :savedMessage="item"
-            :saved="true"
-          />
           <div
-            class="aside__info"
-            v-if="!user.isGuest && !isLoadingUser && savedMessages.length === 0"
+            class="aside__container--items"
+            v-if="!user.isGuest && !isLoadingMessages"
           >
-            {{
-              language === Languages.uk
-                ? `ви немаєте збережених повідомлень`
-                : `You currently have no saved messages.`
-            }}
+            <SideBarItem
+              v-for="item in savedMessages"
+              :key="item.id"
+              :savedMessage="item"
+              :saved="true"
+            />
+            <div
+              class="aside__info"
+              v-if="!user.isGuest && !isLoadingUser && savedMessages.length === 0"
+            >
+              {{
+                language === Languages.uk
+                  ? `ви немаєте збережених повідомлень`
+                  : `You currently have no saved messages.`
+              }}
+            </div>
           </div>
         </div>
+        
       </div>
     </div>
   </aside>

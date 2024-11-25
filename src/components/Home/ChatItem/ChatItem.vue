@@ -11,7 +11,7 @@ import { useStore } from "vuex";
 const props = defineProps({
   item: {
     type: Object as PropType<Message>,
-    required: true
+    // required: true
   },
   isLastItem: {
     type: Boolean,
@@ -29,11 +29,15 @@ const props = defineProps({
   guestChat: {
     type: Boolean,
     default: false,
-  },  
+  },
+  isAiThinkinng: {
+    type:Boolean,
+    default: false
+  }
 });
 
 let i = 0;
-const speed = 50;
+const speed = 20;
 const typedContent = ref("");
 const isTyping = ref(false);
 
@@ -50,7 +54,6 @@ const typeWriter = () => {
     isTyping.value = false;
     store.commit("selectedChat/setIsAiTyping", false);
   }
-
 };
 
 const handleClick = () => {
@@ -63,12 +66,7 @@ const handleClick = () => {
 
 // Start typing when component mounts
 onMounted(() => {
-  console.log(isAiTyping,1)
-  console.log(props.isLastItem,2)
-  console.log(props.item?.is_ai_response,3)
-  console.log(props.item?.content)
   if (isAiTyping && props.isLastItem && props.item?.is_ai_response) {
-    console.log(1)
     i = 0;
     typedContent.value = "";
     isTyping.value = true;
@@ -81,25 +79,35 @@ onMounted(() => {
   <div
     class="chat-item"
     :class="{
-      'chat-item--ai': item?.is_ai_response,
-      'chat-item--user': !item?.is_ai_response,
+      'chat-item--ai': item?.is_ai_response || isAiThinkinng,
+      'chat-item--user': !item?.is_ai_response && !isAiThinkinng,
     }"
   >
     <div class="chat-item__image">
       <img
         src="/pictures/icons/mage_robot-happy.svg"
         alt=""
-        v-if="item?.is_ai_response || isAiResponse"
+        v-if="item?.is_ai_response || isAiResponse || isAiThinkinng"
         class="chat-item__img"
       />
     </div>
     <div
       class="chat-item__text"
       :class="{
-        'chat-item__text--ai': item?.is_ai_response || savedMessage,
-        'chat-item__text--user': !item?.is_ai_response && !isAiResponse,
+        'chat-item__text--ai': item?.is_ai_response || savedMessage ,
+        'chat-item__text--user': !item?.is_ai_response && !isAiResponse || isAiThinkinng,
       }"
     >
+    <div
+      v-if="isAiThinkinng"
+      class="dots-loading-wrapper"
+    >
+      <div class="dots-loading">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
       <div
         v-if="item?.content"
         class="chat-item__text-wrapper"

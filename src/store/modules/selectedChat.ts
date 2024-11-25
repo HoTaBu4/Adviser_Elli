@@ -18,6 +18,7 @@ const DefaultState = {
   isLoading: false,
   isAiTyping: false,
   selecedSaveMessage: null,
+  isAiThinking:false,
 };
 
 export interface SelectedChatState {
@@ -25,6 +26,7 @@ export interface SelectedChatState {
   selecedSaveMessage: SavedMessage | null;
   isLoading: boolean;
   isAiTyping: boolean;
+  isAiThinking: boolean;
 }
 
 const state: SelectedChatState = structuredClone(DefaultState);
@@ -37,12 +39,17 @@ const mutations = {
   setIsAiTyping(state: SelectedChatState, value: boolean) {
     state.isAiTyping = value;
   },
+  setIsAiThinking(state: SelectedChatState,value: boolean) {
+    state.isAiThinking = value
+  },
   setSelectedSavedMessage(
     state: SelectedChatState,
     chat: SavedMessage | { details: object },
   ) {
     state.selectedChat = null;
     state.isAiTyping = false;
+    state.isAiThinking = false
+
     if (!("detail" in chat)) {
       state.selecedSaveMessage = chat as SavedMessage;
     }
@@ -51,6 +58,7 @@ const mutations = {
     state.selecedSaveMessage = null;
     if (!("detail" in chat)) {
       state.selectedChat = chat;
+      state.isAiThinking = false
       state.isAiTyping = false;
     }
   },
@@ -119,18 +127,23 @@ const actions = {
       });
   },
   async createMessage(
-    { commit }: any,
+    { commit, state}: any,
     payload: { chatId: number; text: string },
   ) {
+    commit("setIsAiThinking", true);
     commit("addUserMessage", payload.text);
     commit("setLoading", true);
-    commit("setIsAiTyping", true);
 
     const obj = { content: payload.text };
-
     createMessageByUser(payload.chatId, obj).then((data) => {
-      commit("addAiResponse", data);
-    });
+      if (state.selectedChat.id === payload.chatId) {
+        commit("addAiResponse", data);
+      }
+      commit("setIsAiThinking", false);
+      commit("setIsAiTyping", true);
+    }).catch(() => {
+      commit("setIsAiThinking", false);
+    })
   },
 };
 

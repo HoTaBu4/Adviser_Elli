@@ -144,5 +144,6 @@ export const deleteChat = (chatId: number) => {
 };
 
 export const deleteAllChats = () => {
-  store.dispatch("savedMessages/deleteAllChats");
+  store.dispatch("chats/deleteAllChats");
+  store.commit("selectedChat/reset")
 };

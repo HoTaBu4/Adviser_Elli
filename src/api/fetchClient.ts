@@ -1,7 +1,7 @@
 import { getCookie } from "../assets/cookie";
 import { logout } from "../services/authService";
 
-const BASE_URL = "https://interior-arluene-mwellick-4212a5bc.koyeb.app";
+const BASE_URL = "http://127.0.0.1:8000";
 
 let isLoggingOut = false;
 
@@ -31,6 +31,7 @@ async function request<T>(
     options.body = JSON.stringify(data);
   }
   const response = await fetch(BASE_URL + url, options);
+  
 
   if (response.status === 401 && !isLoggingOut) {
     isLoggingOut = true;

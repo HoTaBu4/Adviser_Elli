@@ -3,6 +3,7 @@ import store, { RootState } from "../store";
 import { LanguageState } from "../types/LanguageType";
 import { Message, SavedMessage } from "../types/MessagesType";
 import { deleteAllSavedMessages, deleteSavedMessage, getAllSavedMessages, saveUnsaveMessage} from "../../api/messages/messages";
+import { fetchAllChats } from "./chats";
 
 const DefaultState = {
   savedMessages: [],
@@ -66,10 +67,12 @@ const actions = {
     deleteAllSavedMessages()
       .then(() => {
         commit("deleteAllSavedMessages");
+        
       })
       .catch((error) => {
       })
       .finally(() => {
+        fetchAllChats();
         commit("setLoading", false);
       });
   },
@@ -137,7 +140,7 @@ export const getSavedMessages = () => {
   store.dispatch("savedMessages/getSavedMessages");
 };
 export const removeAllSavedMessages = () => {
-  store.dispatch("savedMessages/deleteAllSavedMessages");
+  store.dispatch("savedMessages/deleteAllSavedMessages")
 };
 
 export const removeSavedMessage = (chat_id: number, messsage_id: number) => {

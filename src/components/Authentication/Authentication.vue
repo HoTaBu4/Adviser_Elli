@@ -223,7 +223,7 @@ const validatePassword = () => {
       
       <div class="authentication__register-block">
         <div class="authentication__register-text" v-if="isLogin">
-          {{language === Languages.us ? `don&#39;t have an accaunt?` : 'немає акаунта?'}}
+          {{language === Languages.us ? `don&#39;t have an account?` : 'немає акаунта?'}}
         </div>
         <div class="authentication__register-text" v-if="!isLogin">
           {{language === Languages.us ? `have an account?` : 'є акаунт?'}}

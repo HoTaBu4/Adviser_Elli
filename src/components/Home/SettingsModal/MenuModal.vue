@@ -6,13 +6,14 @@ import { Languages } from "../../../store/types/LanguageType";
 import { logout } from "../../../services/authService";
 import { deleteAllSavedMessages } from "../../../api/messages/messages";
 import { deleteAllChats } from "../../../store/modules/chats";
-import debounce from "../../../assets/debouce/debounce";
 import { useStore } from "vuex";
-import { UserState } from "../../../store/types/UserType";
 import { client } from "../../../api/fetchClient";
 import maskEmail from "../../../assets/functions/mustEmail";
 import EventBus from "../../../EventBus";
 import Loader from "../../CommonComponents/Loader/Loader.vue";
+import { UserState } from "../../../store/types/UserType";
+import { SelectedChatState } from "../../../store/modules/selectedChat";
+import { removeAllSavedMessages, SavedMessagesState } from "../../../store/modules/savedMessages";
 
 const info = reactive({
   code: {
@@ -39,7 +40,8 @@ defineProps({
 const emit = defineEmits(["close-modal"]);
 const { language, handleSetLanguage } = useLanguage();
 const store = useStore();
-const user = store.state.user;
+const user: UserState = store.state.user;
+const savedMessages: SavedMessagesState = store.state.savedMessages
 const isSendingTheCode = ref(false);
 const isCooldownActive = ref(false); // Tracks if cooldown is active
 const cooldownTime = 2 * 60 * 1000; // Cooldown time in milliseconds (2 minutes)
@@ -50,10 +52,23 @@ const handleChangeLanguage = (targetLanguage: Languages) => {
   }
 };
 
+const notification = () => {
+  EventBus.emit('notify', {
+  text: language.value === Languages.us
+    ? "You can't change the password when you log in through Google."
+    : "Ви не можете змінити пароль, коли входите через Google.",
+  duration: 5,
+});
+}
+
 const handleSubmit = () => {
   info.code.error = "";
   info.password.error = "";
   info.repeatedPassword.error = "";
+  if (user.isgoogle) {
+    notification()
+    return;
+  }
 
   if (!info.code.text) {
     info.code.error =
@@ -116,6 +131,12 @@ const handleOutsideClick = (event: MouseEvent) => {
   }
 };
 
+const handledeleteSavedMessages = () => {
+  if (savedMessages.savedMessages.length > 0) {
+    removeAllSavedMessages();
+  }
+}
+
 // Register the click event listener to detect clicks outside the modal
 onMounted(() => {
   document.addEventListener("click", handleOutsideClick);
@@ -133,47 +154,51 @@ const accountTitle =
   language.value === Languages.us ? "YOUR ACCOUNT :" : "ТВІЙ АККАУНТ :";
 
 const handleSendCode = () => {
-  if (isCooldownActive.value) {
-    // Notify the user to wait for cooldown
-    const waitMessage =
-      language.value === Languages.us
-        ? "Please wait before resending the code."
-        : "Будь ласка, зачекайте перед повторною відправкою коду.";
-    EventBus.emit("notify", { text: waitMessage, duration: 5 });
-    return;
+  if (!user.isgoogle) {
+    if (isCooldownActive.value) {
+      // Notify the user to wait for cooldown
+      const waitMessage =
+        language.value === Languages.us
+          ? "Please wait before resending the code."
+          : "Будь ласка, зачекайте перед повторною відправкою коду.";
+      EventBus.emit("notify", { text: waitMessage, duration: 5 });
+      return;
+    }
+
+    isSendingTheCode.value = true;
+    isCooldownActive.value = true; // Start cooldown
+
+    client
+      .post("/forgot_password/", { email: user.user.email })
+      .then(() => {
+        const maskedEmail = maskEmail(user.user.email);
+        const successMessage =
+          language.value === Languages.us
+            ? `The code has been sent to ${maskedEmail}`
+            : `Код було надіслано на ${maskedEmail}`;
+        EventBus.emit("notify", { text: successMessage, duration: 5 });
+
+        // Start cooldown timer
+        setTimeout(() => {
+          isCooldownActive.value = false; // Reset cooldown after 2 minutes
+        }, cooldownTime);
+      })
+      .catch((error) => {
+        console.error("Error sending code:", error);
+
+        // Handle error feedback
+        const errorMessage =
+          language.value === Languages.us
+            ? "Failed to send code. Please try again."
+            : "Не вдалося відправити код. Будь ласка, спробуйте ще раз.";
+        EventBus.emit("notify", { text: errorMessage, duration: 5 });
+      })
+      .finally(() => {
+        isSendingTheCode.value = false; // Reset sending state
+      });
+  } else {
+    notification()
   }
-
-  isSendingTheCode.value = true;
-  isCooldownActive.value = true; // Start cooldown
-
-  client
-    .post("/forgot_password/", { email: user.user.email })
-    .then(() => {
-      const maskedEmail = maskEmail(user.user.email);
-      const successMessage =
-        language.value === Languages.us
-          ? `The code has been sent to ${maskedEmail}`
-          : `Код було надіслано на ${maskedEmail}`;
-      EventBus.emit("notify", { text: successMessage, duration: 5 });
-
-      // Start cooldown timer
-      setTimeout(() => {
-        isCooldownActive.value = false; // Reset cooldown after 2 minutes
-      }, cooldownTime);
-    })
-    .catch((error) => {
-      console.error("Error sending code:", error);
-
-      // Handle error feedback
-      const errorMessage =
-        language.value === Languages.us
-          ? "Failed to send code. Please try again."
-          : "Не вдалося відправити код. Будь ласка, спробуйте ще раз.";
-      EventBus.emit("notify", { text: errorMessage, duration: 5 });
-    })
-    .finally(() => {
-      isSendingTheCode.value = false; // Reset sending state
-    });
 };
 
 
@@ -218,7 +243,7 @@ const handleSendCode = () => {
         <div class="menu-modal__buttons">
           <button
             class="menu-modal__delete-chats"
-            @click="deleteAllSavedMessages()"
+            @click="handledeleteSavedMessages()"
           >
             {{
               language === Languages.us
@@ -245,6 +270,7 @@ const handleSendCode = () => {
             :isStatic="true"
             :labelText="language === language.us ? 'code' : `код`"
             :labelColor="true"
+            :disabled="!!user.isgoogle"
           />
           <InputField
             v-model="info.password.text"
@@ -252,23 +278,25 @@ const handleSendCode = () => {
             :placeholder="language === Languages.us ? 'password' : `пароль`"
             name="password"
             :isStatic="true"
-            :labelText="language === language.us ? 'password' : `пароль`"
+            :labelText="language === Languages.us ? 'password' : `пароль`"
             :labelColor="true"
             :isPassword="true"
+            :disabled="!!user.isgoogle"
           />
           <InputField
             v-model="info.repeatedPassword.text"
             :error="info.repeatedPassword.error"
             :placeholder="
-              language === Languages.us ? 'password' : ` повторити пароль`
+              language === Languages.us ? 'password' : `повторити пароль`
             "
             name="repeat password"
             :isStatic="true"
             :labelText="
-              language === language.us ? 'password' : `  повторити пароль`
+              language === Languages.us ? ' repeat password' : ` повторити пароль`
             "
             :labelColor="true"
             :isPassword="true"
+            :disabled="!!user.isgoogle"
           />
         </div>
         <div class="menu-modal__buttons">
@@ -278,7 +306,7 @@ const handleSendCode = () => {
             type="button"
           >
             {{ language === Languages.us ? "SEND CODE" : "НАДІСЛАТИ КОД" }}
-            <Loader size="30" v-if="isSendingTheCode"/>
+            <Loader :size="30" v-if="isSendingTheCode"/>
           </button>
           <button class="menu-modal__save" type="submit">
             {{ language === Languages.us ? "SAVE" : "ЗБЕРЕГТИ" }}

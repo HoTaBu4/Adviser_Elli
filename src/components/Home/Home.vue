@@ -172,7 +172,7 @@ if (
         <div
           class="home__start-chatting 1"
           v-if="
-            !user.isGuest && chats.chats.length === 0 && selectedtheme === null
+            !user.isGuest && chats.chats.length === 0 && selectedtheme === null && !selectedChat.selecedSaveMessage
           "
         >
           <button @click="isOpenSelectTheme = true" class="home__start-button">
@@ -215,6 +215,7 @@ if (
           v-else-if="user.isGuest && selectedThemeGuest !== null"
           :guestChatId="createdChatId"
           :guestChat="true"
+          :selectedChat
           :selectedThemeGuest="selectedThemeGuest"
           @shoseTheme="isOpenSelectTheme = true"
         />

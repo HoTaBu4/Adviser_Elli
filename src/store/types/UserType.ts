@@ -1,6 +1,7 @@
 export interface UserState {
   user: User;
   isloading: Boolean;
+  isgoogle: Boolean;
 }
 
 export interface User {

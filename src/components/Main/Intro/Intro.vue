@@ -21,4 +21,12 @@ const handleClick = () => {
   <Start v-if="start" />
 </template>
 
-<style></style>
+<style lang="scss">
+.main__button {
+  font-size: 17px;
+  font-family: Inter,sans-serif;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 1px;
+}
+</style>

@@ -69,7 +69,11 @@ function autoResize() {
 }
 
 const handleSubmit = () => {
-  if (!props.selectedChat?.selecedSaveMessage && text.value.trim() !== "") {
+  if (!props.selectedChat?.selecedSaveMessage 
+    && text.value.trim() !== "" 
+    && !props.selectedChat?.isAiThinking
+    && !props.selectedChat?.isAiTyping
+  ) {
     //for the guest messages
     if (props.guestChat && !!props.guestChatId && !guestGettingAnswer.value) {
       const lastIndex = chatsItems.length;
@@ -81,19 +85,25 @@ const handleSubmit = () => {
       });
       
       guestGettingAnswer.value = true
-      
-      store.commit("selectedChat/setIsAiTyping", true);
+      store.commit("selectedChat/setIsAiThinking", true);
       client
         .post(`/chats/${props.guestChatId}/guest/message`, {
           content: text.value,
         })
         .then((data: { response: string }) => {
-            chatsItems.push({
-              content: data.response,
-              is_ai_response: true,
-              id: lastIndex + 1,
-            });
-        }).finally(() => guestGettingAnswer.value = false)
+          
+          store.commit("selectedChat/setIsAiThinking", false);
+            
+          chatsItems.push({
+            content: data.response,
+            is_ai_response: true,
+            id: lastIndex + 1,
+          });
+            
+        }).finally(() => {
+          guestGettingAnswer.value = false
+          store.commit("selectedChat/setIsAiThinking", false);
+        })
         
       text.value = ''
     //for the user first message
@@ -102,8 +112,6 @@ const handleSubmit = () => {
       props.selectedChat?.selectedChat === null &&
       !props.selectedChat.isAiTyping
     ) {
-
-      console.log('first message')
       const obj = {
         theme_id: props.selectedtheme,
       };
@@ -113,14 +121,15 @@ const handleSubmit = () => {
         is_ai_response: false,
       };
 
+      store.commit('selectedChat/setIsAiThinking', true)
+
       chatsItems.push(firstUserMessage);
 
       client.post("/chats/create", obj).then((data: Chat) => {
         createdChatUser.value = { ...data, messages: [] };
 
         createdChatUser.value.messages.push(firstUserMessage);
-        
-        store.commit("selectedChat/setIsAiTyping", true);
+
         client
           .post(`/chats/${data.id}/message`, { content: text.value })
           .then((data: AiResponseMessage) => {
@@ -133,6 +142,7 @@ const handleSubmit = () => {
             createdChatUser.value?.messages.push(chatData);
             store.commit("chats/addChat", createdChatUser.value);
             store.commit("selectedChat/setSelectedChat", createdChatUser);
+            store.commit('selectedChat/setIsAiThinking', false)
             store.commit("selectedChat/setIsAiTyping", true);
             emit("resetTheme");
           });
@@ -140,10 +150,9 @@ const handleSubmit = () => {
     // for the user messages
     } else if (
       !props.guestChat &&
-      props.selectedChat?.selectedChat &&
+      !!props.selectedChat?.selectedChat &&
       !props.selectedChat.isAiTyping
     ) {
-      console.log('second message')
       createMessage(props.selectedChat.selectedChat.id, text.value);
       text.value = "";
     }
@@ -177,32 +186,22 @@ onUnmounted(() => {
     <div class="chat__wrapper">
       <div class="chat__header">
       <button class="chat__header-button" @click="createNewChat">
-        <svg
-          viewBox="0 0 23 23"
-          fill="none"
+        <svg 
+          viewBox="0 0 26 26" 
+          fill="none" 
           xmlns="http://www.w3.org/2000/svg"
           class="chat__header-button--svg"
         >
-          <path
-            d="M11.2605 5.75011C11.2609 5.84454 11.2425 5.93811 11.2063 6.02533C11.1701
-              6.11255 11.1168 6.19166 11.0496 6.25802L5.80756 11.5001L11.0496 16.7422C11.1766
-              16.8784 11.2457 17.0587 11.2424 17.2449C11.2392 17.4311 11.1637 17.6087 11.032
-              17.7404C10.9003 17.8721 10.7227 17.9475 10.5365 17.9508C10.3503 17.9541 10.1701
-              17.885 10.0338 17.758L4.28381 12.008C4.14921 11.8733 4.07361 11.6906 4.07361
-              11.5001C4.07361 11.3096 4.14921 11.127 4.28381 10.9922L10.0338 5.24219C10.1686
-              5.10759 10.3513 5.03199 10.5417 5.03199C10.7322 5.03199 10.9149 5.10759 11.0496
-              5.24219C11.1168 5.30855 11.1701 5.38766 11.2063 5.47488C11.2425 5.5621 11.2609
-              5.65567 11.2605 5.75011Z"
-            class="chat__header-button--path"
-          />
-          <path
-            d="M18.927 11.5C18.9246 11.6899 18.848 11.8712 18.7138 12.0055C18.5795
-              12.1397 18.3981 12.2163 18.2083 12.2187L4.79163 12.2187C4.601 12.2187
-              4.41818 12.143 4.28339 12.0082C4.1486 11.8734 4.07288 11.6906 4.07288
-              11.5C4.07288 11.3094 4.1486 11.1266 4.28339 10.9918C4.41818 10.857
-              4.601 10.7812 4.79163 10.7812L18.2083 10.7812C18.3981 10.7837 18.5795
-              10.8603 18.7138 10.9945C18.848 11.1288 18.9246 11.3101 18.927 11.5Z"
-            class="chat__header-button--path"
+          <path d="M14.875 2.375C14.875 1.87772 14.6775 1.40081 14.3258 1.04917C13.9742 0.697544 
+          13.4973 0.5 13 0.5C12.5027 0.5 12.0258 0.697544 11.6742 1.04917C11.3225 1.40081 11.125 
+          1.87772 11.125 2.375V11.125H2.375C1.87772 11.125 1.40081 11.3225 1.04917 11.6742C0.697544 
+          12.0258 0.5 12.5027 0.5 13C0.5 13.4973 0.697544 13.9742 1.04917 14.3258C1.40081 14.6775 
+          1.87772 14.875 2.375 14.875H11.125V23.625C11.125 24.1223 11.3225 24.5992 11.6742 24.9508C12.0258 
+          25.3025 12.5027 25.5 13 25.5C13.4973 25.5 13.9742 25.3025 14.3258 24.9508C14.6775 24.5992 
+          14.875 24.1223 14.875 23.625V14.875H23.625C24.1223 14.875 24.5992 14.6775 24.9508 14.3258C25.3025 
+          13.9742 25.5 13.4973 25.5 13C25.5 12.5027 25.3025 12.0258 24.9508 11.6742C24.5992 11.3225 24.1223 
+          11.125 23.625 11.125H14.875V2.375Z" 
+          class="chat__header-button--path"
           />
         </svg>
       </button>
@@ -226,6 +225,10 @@ onUnmounted(() => {
       <div class="chat__img-wrapper" v-if="guestChat && selectedThemeGuest">
         <img :src="themesInfo[selectedThemeGuest - 1].url" alt="" class="chat__img" />
       </div>
+      <!-- for saved message -->
+      <div class="chat__title" v-if="!guestChat && selectedChat?.selecedSaveMessage">
+        Saved message
+      </div>
       </div>
       <div class="chat__main">
         <ChatItem
@@ -234,7 +237,8 @@ onUnmounted(() => {
           :item
           :key="item.id"
           :isLastItem="index === selectedChat.selectedChat.messages.length - 1"
-          :chatId="props.selectedChat?.selectedChat?.id"
+          :chatId="selectedChat.selectedChat.id"
+          :isAiThinking="selectedChat.isAiThinking"
         />
         <ChatItem
           v-if="
@@ -247,6 +251,7 @@ onUnmounted(() => {
           :key="item.id"
           :isLastItem="index === chatsItems.length"
           :chatId="props.selectedChat?.selectedChat?.id"
+          :isAiThinking="selectedChat.isAiThinking"
         />
         <ChatItem
           v-if="guestChat"
@@ -255,6 +260,12 @@ onUnmounted(() => {
           :key="item.id"
           :isLastItem="index === chatsItems.length"
           :guestChat="true"
+        />
+
+        <ChatItem
+          v-if="selectedChat.isAiThinking"
+          :isLastItem="true"
+          :isAiThinkinng="true"
         />
 
         <!-- for the savedMessage -->

@@ -2,6 +2,7 @@ import store from "../store/store";
 import { getCookie } from "../assets/cookie";
 import routes from "../routes/routes";
 import { client } from "../api/fetchClient";
+import EventBus from "../EventBus";
 
 export function logout() {
   routes.replace("/Authentication/login");
@@ -29,6 +30,7 @@ export function setTokenExpirationWatcher() {
     if (timeUntilExpiration > 0) {
       setTimeout(() => {
         logout();
+        EventBus.emit('notify', {duration: 5, text: 'session is expired'})
       }, timeUntilExpiration);
     } else {
       logout();

@@ -46,6 +46,11 @@ defineProps({
     type: Boolean,
     reqired: false,
   },
+  disabled: {
+    type: Boolean,
+    requred: false,
+    default: false,
+  }
 });
 
 const isShownPassword = ref(false);
@@ -89,6 +94,7 @@ const handleInput = (event: Event) => {
         :value="modelValue"
         @input="handleInput"
         :class="{ 'input-field__input--error': error, password: isPassword }"
+        :disabled="disabled"
       />
       <button
         v-if="isPassword"

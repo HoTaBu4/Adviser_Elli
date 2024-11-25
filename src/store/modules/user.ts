@@ -19,6 +19,7 @@ const DefaultState = {
     id: null,
     isGuest: true,
   },
+  isgoogle: false,
   isloading: false,
 };
 
@@ -29,8 +30,9 @@ const getters = {
 };
 
 const mutations = {
-  setUser(state: UserState, user: Partial<UserState>) {
-    state.user = { ...state.user, ...user ,isGuest : false };
+  setUser(state: UserState, payload: {user: Partial<UserState>,isgoogle: Boolean}) {
+    state.user = { ...state.user, ...payload.user ,isGuest : false };
+    state.isgoogle = payload.isgoogle;
   },
   setLoading(state: UserState, isLoading: boolean) {
     state.isloading = isLoading;
@@ -63,7 +65,7 @@ const actions = {
         if ("access_token" in response) {
           resetTheUser();
           const data: CustomJwtPayload = jwtDecode(response.access_token);
-          commit('setUser', { email: data.sub, id: data.id });
+          commit('setUser', {user: { email: data.sub, id: data.id }, isgoogle: false});
           router.push({ path: '/home' });
           document.cookie = `token=${response.access_token}; path=/; max-age=3600; SameSite=Strict; Secure`;
         } 

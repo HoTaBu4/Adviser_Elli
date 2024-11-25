@@ -16,17 +16,19 @@ onMounted(() => {
   if (code) {
     client
       .get(`/auth/google/?code=${code}`)
-      .then((data) => {
-        resetTheUser();
-        // Store the token in a cookie for later authentication
-        document.cookie = `token=${data.access_token}; path=/; max-age=3600; SameSite=Strict; Secure`;
+      .then((data: any) => {
+        if (data.access_token) {
+          resetTheUser();
+          // Store the token in a cookie for later authentication
+          document.cookie = `token=${data.access_token}; path=/; max-age=3600; SameSite=Strict; Secure`;
 
-        // Decode user data and store in Vuex
-        const userData = jwtDecode(data.access_token);
-        store.commit("user/setUser", { email: userData.sub, id: userData.id });
+          // Decode user data and store in Vuex
+          const userData = jwtDecode(data.access_token);
+          store.commit("user/setUser", {user: { email: userData.sub, id: userData.id },isgoogle: true});
 
-        // Redirect after successful login
-        window.location.replace("/home");
+          // Redirect after successful login
+          window.location.replace("/home");
+        }
       })
       .catch((error) => {
         console.error("Error during API request:", error);
