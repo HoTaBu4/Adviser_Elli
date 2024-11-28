@@ -62,12 +62,14 @@ const actions = {
         commit("setLoading", false);
       });
   },
-  async deleteAllSavedMessages({ commit }: any) {
+  async deleteAllSavedMessages({ commit, dispatch ,rootState:rootState}: any) {
     commit("setLoading", true);
     deleteAllSavedMessages()
       .then(() => {
         commit("deleteAllSavedMessages");
-        
+        if (rootState.selectedChat.selectedChat.id) {
+          dispatch('selectedChat/getChatHistory',rootState.rootState.selectedChat.selectedChat.id);
+        }
       })
       .catch((error) => {
       })

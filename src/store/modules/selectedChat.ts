@@ -104,7 +104,7 @@ const mutations = {
 };
 
 const actions = {
-  async getChatHistory({ commit }: any, chatId: number) {
+  async getChatHistory({ commit}: any, chatId: number) {
     commit("setLoading", true);
 
     retrieveChat(chatId)

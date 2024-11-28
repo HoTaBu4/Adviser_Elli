@@ -16,17 +16,10 @@ const handleClick = () => {
       </h1>
       <h2 class="main__text--h2">24/7</h2>
     </div>
-    <button class="main__button" @click="handleClick">start now</button>
+    <button class="main__button-start" @click="handleClick">start now</button>
   </div>
   <Start v-if="start" />
 </template>
 
-<style lang="scss">
-.main__button {
-  font-size: 17px;
-  font-family: Inter,sans-serif;
-  font-weight: 500;
-  line-height: 21px;
-  letter-spacing: 1px;
-}
+<style>
 </style>

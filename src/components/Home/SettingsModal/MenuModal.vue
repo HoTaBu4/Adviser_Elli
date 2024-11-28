@@ -40,11 +40,12 @@ defineProps({
 const emit = defineEmits(["close-modal"]);
 const { language, handleSetLanguage } = useLanguage();
 const store = useStore();
-const user: UserState = store.state.user;
-const savedMessages: SavedMessagesState = store.state.savedMessages
 const isSendingTheCode = ref(false);
 const isCooldownActive = ref(false); // Tracks if cooldown is active
 const cooldownTime = 2 * 60 * 1000; // Cooldown time in milliseconds (2 minutes)
+
+const user: UserState = store.state.user;
+const savedMessages: SavedMessagesState = store.state.savedMessages
 
 const handleChangeLanguage = (targetLanguage: Languages) => {
   if (language.value !== targetLanguage) {
