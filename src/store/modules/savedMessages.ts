@@ -74,7 +74,6 @@ const actions = {
       .catch((error) => {
       })
       .finally(() => {
-        fetchAllChats();
         commit("setLoading", false);
       });
   },

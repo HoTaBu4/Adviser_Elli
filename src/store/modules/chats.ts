@@ -10,6 +10,7 @@ import {
 import { createMessageByUser } from "../../api/messages/messages";
 import { AiResponseMessage } from "../types/MessagesType";
 import { resetTheUser } from "../../services/authService";
+import { useStore } from "vuex";
 
 const initialState = {
   chats: [],
@@ -91,7 +92,8 @@ const actions = {
   async deleteAllChats({ commit }: any) {
     delAllChats().then(() => {
       commit("removeAllChats");
-    });
+      store.commit("selectedChat/reset");
+    })
   },
   async addChat(
     { commit }: any,
@@ -145,5 +147,4 @@ export const deleteChat = (chatId: number) => {
 
 export const deleteAllChats = () => {
   store.dispatch("chats/deleteAllChats");
-  store.commit("selectedChat/reset")
 };

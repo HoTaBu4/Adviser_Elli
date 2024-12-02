@@ -25,6 +25,12 @@
     height: 100%;
   }
 
+  &__loader-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
   &__request,
   &__saved {
     height: 50%;

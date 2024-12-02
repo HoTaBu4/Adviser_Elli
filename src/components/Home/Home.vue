@@ -61,7 +61,7 @@ const createChatGuest = () => {
   client.post("/chats/guest/create", obj).then((data: { id: number }) => {
     if (data) {
       createdChatId.value = data.id;
-      setCookie('guest_chat_data',{'chat_id': data.id, 'theme_id': selectedThemeGuest},3600)
+      setCookie('guest_chat_data',{'chat_id': data.id, 'theme_id': selectedThemeGuest},36000)
     }
   });
 };

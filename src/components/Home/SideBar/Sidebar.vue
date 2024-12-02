@@ -6,7 +6,7 @@ import { useStore } from "vuex";
 import { RootState } from "../../../store/store";
 import { UserState } from "../../../store/types/UserType";
 import { fetchAllChats } from "../../../store/modules/chats";
-import { Chat } from "../../../store/types/ChatType";
+import { Chat, ChatsState } from "../../../store/types/ChatType";
 import SideBarItem from "./../SideBarItem/SideBarItem.vue";
 import {
   getChatHistory,
@@ -16,6 +16,7 @@ import {
   getSavedMessages,
   SavedMessagesState,
 } from "../../../store/modules/savedMessages";
+import Loader from "../../CommonComponents/Loader/Loader.vue";
 
 defineProps({
   isOpenSidebar: {
@@ -32,12 +33,9 @@ const { language } = useLanguage();
 const store = useStore<RootState>();
 
 const { user, isloading: isLoadingUser }: UserState = store.state.user;
-const chats: ComputedRef<Chat[]> = computed(() => store.state.chats.chats);
-const savedMessagesState: ComputedRef<SavedMessagesState> = computed(
-  () => store.state.savedMessages,
-);
-const savedMessages = computed(() => savedMessagesState.value.savedMessages);
-const isLoadingMessages = computed(() => savedMessagesState.value.isLoading);
+const chats: ChatsState = store.state.chats;
+const savedMessagesState: SavedMessagesState = store.state.savedMessages
+// const isLoadingMessages = computed(() => savedMessagesState.value.isLoading);
 
 onMounted(() => {
   if (!user.isGuest) {
@@ -45,8 +43,8 @@ onMounted(() => {
     getSavedMessages();
   }
 
-  if (chats.value.length > 0 && !user.isGuest) {
-    getChatHistory(chats.value[0].id);
+  if (chats.chats.length > 0 && !user.isGuest) {
+    getChatHistory(chats.chats[0].id);
   }
 });
 </script>
@@ -85,7 +83,7 @@ onMounted(() => {
           </div>
           <div
             class="aside__info"
-            v-if="!user.isGuest && !isLoadingUser && chats.length === 0"
+            v-if="!user.isGuest && !isLoadingUser && chats.chats.length === 0 && !chats.isloading"
           >
             {{
               language === Languages.uk
@@ -95,9 +93,12 @@ onMounted(() => {
           </div>
           <div
             class="aside__container--items"
-            v-if="!user.isGuest && !isLoadingUser && chats.length > 0"
+            v-if="!user.isGuest && !isLoadingUser && chats.chats.length > 0"
           >
-            <SideBarItem v-for="chat in chats" :key="chat.id" :chat="chat" />
+            <SideBarItem v-for="chat in chats.chats" :key="chat.id" :chat="chat" />
+          </div>
+          <div class="aside__loader-wrapper" v-if="chats.isloading">
+            <Loader :size="30"/>
           </div>
         </div>
       </div>
@@ -130,17 +131,17 @@ onMounted(() => {
           </div>
           <div
             class="aside__container--items"
-            v-if="!user.isGuest && !isLoadingMessages"
+            v-if="!user.isGuest && !savedMessagesState.isLoading"
           >
             <SideBarItem
-              v-for="item in savedMessages"
+              v-for="item in savedMessagesState.savedMessages"
               :key="item.id"
               :savedMessage="item"
               :saved="true"
             />
             <div
               class="aside__info"
-              v-if="!user.isGuest && !isLoadingUser && savedMessages.length === 0"
+              v-if="!user.isGuest && !isLoadingUser && savedMessagesState.savedMessages.length === 0"
             >
               {{
                 language === Languages.uk
@@ -149,8 +150,10 @@ onMounted(() => {
               }}
             </div>
           </div>
+          <div class="aside__loader-wrapper" v-if="savedMessagesState.isLoading">
+            <Loader :size="30"/>
+          </div>
         </div>
-        
       </div>
     </div>
   </aside>

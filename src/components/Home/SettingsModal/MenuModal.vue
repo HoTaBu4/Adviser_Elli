@@ -4,7 +4,6 @@ import InputField from "../../CommonComponents/InputField/InputField.vue";
 import { useLanguage } from "../../../assets/hooks/useLanguage";
 import { Languages } from "../../../store/types/LanguageType";
 import { logout } from "../../../services/authService";
-import { deleteAllSavedMessages } from "../../../api/messages/messages";
 import { deleteAllChats } from "../../../store/modules/chats";
 import { useStore } from "vuex";
 import { client } from "../../../api/fetchClient";
@@ -12,7 +11,6 @@ import maskEmail from "../../../assets/functions/mustEmail";
 import EventBus from "../../../EventBus";
 import Loader from "../../CommonComponents/Loader/Loader.vue";
 import { UserState } from "../../../store/types/UserType";
-import { SelectedChatState } from "../../../store/modules/selectedChat";
 import { removeAllSavedMessages, SavedMessagesState } from "../../../store/modules/savedMessages";
 
 const info = reactive({
@@ -138,6 +136,10 @@ const handledeleteSavedMessages = () => {
   }
 }
 
+const handleDeleteAllChats = () => {
+  deleteAllChats();
+}
+
 // Register the click event listener to detect clicks outside the modal
 onMounted(() => {
   document.addEventListener("click", handleOutsideClick);
@@ -207,7 +209,7 @@ const handleSendCode = () => {
 
 <template>
   <div class="menu-modal" @click="handleOutsideClick">
-    <form class="menu-modal__content" @click.stop>
+    <form class="menu-modal__content" @click.stop.prevent>
       <div class="menu-modal__close">
         <img
           src="/pictures/icons/mobile_close.svg"
@@ -252,7 +254,7 @@ const handleSendCode = () => {
                 : "ВИДАЛИТИ ВСІ ЗБЕРЕЖЕНІ"
             }}
           </button>
-          <button class="menu-modal__delete-chats" @click="deleteAllChats()">
+          <button class="menu-modal__delete-chats" @click="handleDeleteAllChats()">
             {{
               language === Languages.us
                 ? "DELETE ALL CHATS"

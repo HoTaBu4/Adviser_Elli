@@ -90,6 +90,13 @@ const handleSubmit = () => {
           'duration': 5
         })
       } else {
+        EventBus.emit('notify', {
+          'text' : language.value === Languages.us
+            ? 'Password has been successfully reset'
+            : 'Пароль успішно скинуто',
+          'duration': 5
+        })
+        
         router.push("/Authentication/login");
       }
     });

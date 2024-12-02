@@ -62,6 +62,9 @@ const mutations = {
       state.isAiTyping = false;
     }
   },
+  setNullChat (state: SelectedChatState) { 
+    state.selectedChat = null
+  },
   setLoading(state: SelectedChatState, variable: boolean) {
     state.isLoading = variable;
   },
@@ -85,7 +88,8 @@ const mutations = {
     });
   },
   reset(state: SelectedChatState) {
-    Object.assign(state, structuredClone(DefaultState));
+    const newState = structuredClone(DefaultState);
+    Object.assign(state, newState); 
   },
   resetChatAndSavedMessage(state: SelectedChatState) {
     state.selectedChat = null;
